@@ -7,20 +7,21 @@ int killPin(unsigned int pin)
     if ((handle = fopen("/sys/class/gpio/unexport", "w")) == NULL)
     {
         printf("Cannot open UNEXPORT File. Try again later.\n");
-        return 1; // error
     }
-    char pin_name[4];
+    char *pin_name = malloc(16 * sizeof(char));
     sprintf(pin_name, "%u", pin);
     nWritten = fputs(pin_name, handle);
+
     if (nWritten == -1)
     {
         printf("Cannot UNEXPORT PIN . Try again later.\n");
         fclose(handle);
-        return 1; // error
     }
     else
+    {
         printf("UNEXPORT File opened succesfully \n");
-
+    }
+    free(pin_name);
     fclose(handle); // Be carefull do this for EACH pin !!!
     
     return 0;
@@ -29,10 +30,10 @@ int killPin(unsigned int pin)
 void setPin(unsigned int pin, bool value)
 {
     FILE *handle;
-    int nWritten;
     
-    char pin_path[64];
-    sprintf(pin_path, "/sys/class/gpio/gpio%u/direction", pin);
+    char *pin_path = malloc( 64 * sizeof(char) );
+
+    sprintf(pin_path, "/sys/class/gpio/gpio%u/value", pin);
 
     if ((handle = fopen(pin_path, "w")) == NULL)
     {
@@ -47,7 +48,13 @@ void setPin(unsigned int pin, bool value)
         printf("Clr_Pin: Cannot write to file. Try again later.\n");
     }
     else
+    {
+        fflush(handle);
         printf("Write to file %s successfully done.\n", pin_path);
+        printf("\n"); //Enter para distinguir comandos de los pines
+    }
+
+    free(pin_path);
     fclose(handle);
 }
 
@@ -55,14 +62,17 @@ int pinMode(unsigned int pin, char* direction)
 {
     FILE *handle_export;
     int nWritten;
+
     if ((handle_export = fopen("/sys/class/gpio/export", "w")) == NULL)
     {
         printf("Cannot open EXPORT File. Try again later.\n");
         return 1; // error
     }
-    char pin_name[4];
+
+    char *pin_name = malloc(16* sizeof(char));
     sprintf(pin_name, "%u", pin);
     nWritten = fputs(pin_name, handle_export);
+
     if (nWritten == -1)
     {
         printf("Cannot EXPORT PIN . Try again later.\n");
@@ -70,32 +80,35 @@ int pinMode(unsigned int pin, char* direction)
         return 1; // error
     }
     else
+    {
         printf("EXPORT File opened succesfully \n");
+    }
 
+    free(pin_name);
     fclose(handle_export); // Be carefull do this for EACH pin !!!
     
 
     // *** Set direction *** //
     FILE *handle_direction;
 
-    char pin_path[64];
+    char *pin_path = malloc( 64 * sizeof(char) );
+
     sprintf(pin_path, "/sys/class/gpio/gpio%u/direction", pin);
     if ((handle_direction = fopen(pin_path, "w")) == NULL)
     {
         printf("Cannot open DIRECTION File");
-        return 1; // error
     }
     // Set pin Direction
     if ((nWritten = fputs(direction, handle_direction)) == -1)
     {
         printf("Cannot open DIRECTION pin. Try again later.\n");
         fclose(handle_direction); // Be carefull do this for EACH pin !!!
-        return 1; // error
     }
     else
     {
         printf("DIRECTION File for PIN opened succesfully\n");
     }
+    free (pin_path);
     fclose(handle_direction); // Be carefull do this for EACH pin !!!
     return 0;
 }
