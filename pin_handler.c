@@ -1,7 +1,7 @@
 #include "pin_handler.h"
 #include <errno.h>
 
-int killPin(unsigned int pin)
+int killPin(unsigned int pin) //Revisar KillPin ya que apaga los leds
 {
     FILE *handle;
     int nWritten;
@@ -141,5 +141,11 @@ int statusPin (int pin)
     {
         return 1;
     }
-    return 0;
+    else if (fgetc(handle) == '0')
+    {
+        out = false;
+    }
+
+    fclose(handle);
+    return out;
 }

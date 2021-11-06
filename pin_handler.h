@@ -11,5 +11,4 @@ void setPin(unsigned int pin, bool value);
 int statusPin (int pin);
 
 
-
 #endif
