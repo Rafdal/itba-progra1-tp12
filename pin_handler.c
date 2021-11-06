@@ -1,4 +1,5 @@
 #include "pin_handler.h"
+#include <errno.h>
 
 int killPin(unsigned int pin)
 {
@@ -60,10 +61,11 @@ void setPin(unsigned int pin, bool value)
 
 int pinMode(unsigned int pin, char* direction)
 {
+    errno= 0;
     FILE *handle_export;
     int nWritten;
 
-    if ((handle_export = fopen("/sys/class/gpio/export", "w")) == NULL)
+    if ((handle_export = fopen("/sys/class/gpio/export", "w+")) == NULL)
     {
         printf("Cannot open EXPORT File. Try again later.\n");
         return 1; // error
@@ -86,7 +88,6 @@ int pinMode(unsigned int pin, char* direction)
 
     free(pin_name);
     fclose(handle_export); // Be carefull do this for EACH pin !!!
-    
 
     // *** Set direction *** //
     FILE *handle_direction;
@@ -94,11 +95,16 @@ int pinMode(unsigned int pin, char* direction)
     char *pin_path = malloc( 64 * sizeof(char) );
 
     sprintf(pin_path, "/sys/class/gpio/gpio%u/direction", pin);
-    if ((handle_direction = fopen(pin_path, "w")) == NULL)
+
+    handle_direction = (fopen(pin_path, "w+"));
+
+    if(handle_direction == NULL)
     {
-        printf("Cannot open DIRECTION File");
+        printf("Error: %d \n", errno);
+        printf("It´s NULL");
     }
-    // Set pin Direction
+
+
     if ((nWritten = fputs(direction, handle_direction)) == -1)
     {
         printf("Cannot open DIRECTION pin. Try again later.\n");
@@ -108,6 +114,7 @@ int pinMode(unsigned int pin, char* direction)
     {
         printf("DIRECTION File for PIN opened succesfully\n");
     }
+
     free (pin_path);
     fclose(handle_direction); // Be carefull do this for EACH pin !!!
     return 0;

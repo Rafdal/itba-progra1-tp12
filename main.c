@@ -11,6 +11,7 @@ int main(void)
     {
         pinMode(arr[i], "out");
         setPin(arr[i], 1);
+        killPin( arr[i] );
     }
 
     return 0;
