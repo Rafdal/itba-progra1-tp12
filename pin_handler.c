@@ -119,3 +119,27 @@ int pinMode(unsigned int pin, char* direction)
     fclose(handle_direction); // Be carefull do this for EACH pin !!!
     return 0;
 }
+
+int statusPin (int pin)
+{
+    FILE *handle;
+
+    char *pin_path = malloc( 64 * sizeof(char) );
+
+    sprintf(pin_path, "/sys/class/gpio/gpio%u/value", pin);
+
+    if ((handle = fopen(pin_path, "w")) == NULL)
+    {
+        printf("Cannot open device. Try again later.\n");
+    }
+    else
+    {
+        printf("Device successfully opened\n");
+    }
+
+    if ( fgetc(handle) == '1' )
+    {
+        return 1;
+    }
+    return 0;
+}

@@ -6,6 +6,5 @@ set(CMAKE_C_STANDARD 11)
 include_directories(.)
 
 add_executable(itba_progra1_tp12
-        main.c
         pin_handler.c
-        pin_handler.h)
+        pin_handler.h led.c led.h)

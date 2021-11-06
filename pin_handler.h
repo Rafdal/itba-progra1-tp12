@@ -8,6 +8,8 @@
 int pinMode(unsigned int pin, char* direction);
 int killPin(unsigned int pin);
 void setPin(unsigned int pin, bool value);
+int statusPin (int pin);
+
 
 
 #endif
