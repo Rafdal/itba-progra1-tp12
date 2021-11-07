@@ -1,7 +1,8 @@
 #include "pin_handler.h"
 #include <errno.h>
 
-int killPin(unsigned int pin) //Revisar KillPin ya que apaga los leds
+
+int killPin(unsigned int pin)
 {
     FILE *handle;
     int nWritten;
@@ -9,7 +10,7 @@ int killPin(unsigned int pin) //Revisar KillPin ya que apaga los leds
     {
         printf("Cannot open UNEXPORT File. Try again later.\n");
     }
-    char *pin_name = malloc(16 * sizeof(char));
+    char *pin_name = malloc(BUFFER * sizeof(char));
     sprintf(pin_name, "%u", pin);
     nWritten = fputs(pin_name, handle);
 
@@ -34,7 +35,7 @@ void setPin(unsigned int pin, bool value)
 {
     FILE *handle;
     
-    char *pin_path = malloc( 64 * sizeof(char) );
+    char *pin_path = malloc( BUFFER * sizeof(char) );
 
     sprintf(pin_path, "/sys/class/gpio/gpio%u/value", pin);
 
@@ -78,7 +79,7 @@ int pinMode(unsigned int pin, char* direction)
         statusCode = 1;
     }
 
-    char *pin_name = malloc(16* sizeof(char));
+    char *pin_name = malloc(BUFFER * sizeof(char));
     sprintf(pin_name, "%u", pin);
     nWritten = fputs(pin_name, handle_export);
 
@@ -101,7 +102,7 @@ int pinMode(unsigned int pin, char* direction)
     // *** Set direction *** //
     FILE *handle_direction;
 
-    char *pin_path = malloc( 64 * sizeof(char) );
+    char *pin_path = malloc( BUFFER * sizeof(char) );
 
     sprintf(pin_path, "/sys/class/gpio/gpio%u/direction", pin);
 
@@ -135,7 +136,7 @@ int statusPin (int pin)
     FILE *handle;
     bool out = false;
 
-    char *pin_path = malloc( 64 * sizeof(char) );
+    char *pin_path = malloc( BUFFER * sizeof(char) );
 
     sprintf(pin_path, "/sys/class/gpio/gpio%u/value", pin);
 

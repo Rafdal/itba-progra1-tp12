@@ -7,4 +7,4 @@ include_directories(.)
 
 add_executable(itba_progra1_tp12
         pin_handler.c
-        pin_handler.h led.c led.h ledwrapper.c ledwrapper.h)
+        pin_handler.h ledwrapper.c ledwrapper.h)

@@ -9,7 +9,7 @@
 #include <stdbool.h>
 
 void toggleAll_w(void ); // Toggle all emulators
-void setPin_w(uint8_t pin); // Set pin wrapper
+void setPin_w(uint8_t pin); // Set pin to ON
 void offAll_w(void); // Turn Off all
 void onAll_w(void); // Turn On all
 void quit_w (void); //Unexport all leds

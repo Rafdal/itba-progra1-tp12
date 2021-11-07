@@ -3,7 +3,6 @@
 //
 
 #include "ledwrapper.h"
-
 #include "puerto.h"
 #include "pin_handler.h"
 
@@ -18,17 +17,18 @@ void toggleAll_w(void)
     maskToggle(PORT_A, 0xFF);
     printPort(PORT_A);
 
+
     // Invierte todos los LEDs de la raspberry
     int l;
     for( l = 0; l < 8 ; l++)
     {
         if( statusPin(arr[l]) ) //Si el led esta prendido
         {
-            setPin( arr[l] , 0);
+            setPin( arr[l] , 0); //Set bit "l" to 0
         }
         else
         {
-            setPin(arr[l], 1);
+            setPin(arr[l], 1); //Set bit "l" to 1
         }
     }
 }
@@ -37,18 +37,18 @@ void toggleAll_w(void)
 void setPin_w(uint8_t pin) // Set pin wrapper
 {
     bitSet(PORT_A, pin); //uso bitset para encender ese bit del puerto
-
     printPort(PORT_A);
 
     int status = pinMode(arr[pin], "out");
     if(!status){
         setPin(arr[pin], true);
     }
-    else{
+
+    else
+	{
         printf("Error pinMode retorno: %u\n", status);
     }
 }
-
 
 void offAll_w(void)
 {
@@ -74,6 +74,7 @@ void onAll_w(void)
     maskOn(PORT_A, mascara); //Analogo al caso de la letra c pero con la funcion maskOn, que los deja en 1
     printPort(PORT_A);
 
+
     int i;
     for ( i=0 ; i < 8; i++)
     {
@@ -88,11 +89,12 @@ void onAll_w(void)
     }
 }
 
+
 void quit_w (void)
 {
     int k;
     for(k=0; k < 8 ; k++)
     {
-        killPin(arr[k]);
+        killPin(arr[k]); //Unexport all led's
     }
 }
